@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <module name="LineLength">
+        <property name="max" value="120"/>
+        <property name="ignorePattern" value="^package.*|^import.*"/>
+    </module>
+
+    <!-- Перевірка пробілів у кінці рядка -->
+    <module name="RegexpSingleline">
+        <property name="format" value="\s+$"/>
+        <property name="message" value="Trailing whitespace detected."/>
+    </module>
+
+    <!-- Заборона кількох порожніх рядків -->
+    <module name="RegexpMultiline">
+        <property name="format" value="\n\s*\n\s*\n"/>
+        <property name="message" value="Avoid multiple empty lines."/>
+    </module>
+
+    <module name="TreeWalker">
+        <module name="Indentation">
+            <property name="basicOffset" value="4"/>
+            <property name="braceAdjustment" value="0"/>
+            <property name="caseIndent" value="4"/>
+            <property name="tabWidth" value="4"/>
+        </module>
+
+        <module name="WhitespaceAfter"/>
+        <module name="NoWhitespaceBefore"/>
+        <module name="FinalLocalVariable"/>
+        <module name="LocalVariableName"/>
+        <module name="MethodName"/>
+        <module name="TypeName"/>
+        <module name="ParenPad"/>
+        <module name="EmptyBlock"/>
+        <module name="NestedTryDepth">
+            <property name="max" value="1"/>
+        </module>
+    </module>
+</module>
