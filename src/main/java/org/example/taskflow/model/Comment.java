@@ -1,10 +1,15 @@
 package org.example.taskflow.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,44 +19,28 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 public class Comment {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @EmbeddedId
+    private CommentId id;
 
-    @NotNull
-    private Long taskId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("taskId")
+    @JoinColumn(name = "Task_Id")
+    private Task task;
 
-    @NotNull
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId("userId")
+    @JoinColumn(name = "User_Id")
+    private User user;
 
-    @NotBlank
-    @Column(columnDefinition = "TEXT")
+    @Column(length = 1000)
     private String text;
 
-    private LocalDateTime timestamp = LocalDateTime.now();
-
-    public Long getId() {
+    public CommentId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(CommentId id) {
         this.id = id;
-    }
-
-    public @NotNull Long getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(@NotNull Long taskId) {
-        this.taskId = taskId;
-    }
-
-    public @NotNull Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(@NotNull Long userId) {
-        this.userId = userId;
     }
 
     public @NotBlank String getText() {
@@ -62,11 +51,19 @@ public class Comment {
         this.text = text;
     }
 
-    public LocalDateTime getTimestamp() {
-        return timestamp;
+    public Task getTask() {
+        return task;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
