@@ -1,0 +1,130 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-initial-schema
+      author: Roman
+      changes:
+
+        - createTable:
+            tableName: User
+            columns:
+              - column: { name: Id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true } }
+              - column: { name: Username, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: Email, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: FirstName, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: LastName, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: password, type: VARCHAR(255), constraints: { nullable: false } }
+
+        - createTable:
+            tableName: Project
+            columns:
+              - column: { name: Id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true } }
+              - column: { name: Name, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: Description, type: VARCHAR(2000), constraints: { nullable: false } }
+              - column: { name: StartDate, type: DATETIME, constraints: { nullable: false } }
+              - column: { name: EndDate, type: DATETIME, constraints: { nullable: false } }
+              - column: { name: Status, type: VARCHAR(20), constraints: { nullable: false } }
+
+        - createTable:
+            tableName: Task
+            columns:
+              - column: { name: Id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true } }
+              - column: { name: Name, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: Description, type: VARCHAR(2000), constraints: { nullable: false } }
+              - column: { name: Priority, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: Status, type: VARCHAR(10), constraints: { nullable: false } }
+              - column: { name: DueDate, type: DATETIME, constraints: { nullable: false } }
+              - column: { name: Project_Id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: Assignee_id, type: BIGINT, constraints: { nullable: false } }
+
+        - createTable:
+            tableName: Comment
+            columns:
+              - column: { name: User_Id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: Task_Id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: Text, type: VARCHAR(1000), constraints: { nullable: false } }
+              - column: { name: TimeStamp, type: DATETIME, constraints: { nullable: false } }
+            primaryKey:
+              columns: [User_Id, Task_Id, TimeStamp]
+
+        - createTable:
+            tableName: Attachment
+            columns:
+              - column: { name: Id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true } }
+              - column: { name: Task_Id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: DropboxFileId, type: VARCHAR(255), constraints: { nullable: false } }
+              - column: { name: FileName, type: VARCHAR(40), constraints: { nullable: false } }
+              - column: { name: UploadDate, type: DATETIME, constraints: { nullable: false } }
+
+        - createTable:
+            tableName: Label
+            columns:
+              - column: { name: Id, type: BIGINT, autoIncrement: true, constraints: { primaryKey: true } }
+              - column: { name: Color, type: VARCHAR(20), constraints: { nullable: false } }
+              - column: { name: Name, type: VARCHAR(40), constraints: { nullable: false } }
+
+        - createTable:
+            tableName: task_label
+            columns:
+              - column: { name: Task_Id, type: BIGINT, constraints: { nullable: false } }
+              - column: { name: Label_Id, type: BIGINT, constraints: { nullable: false } }
+            primaryKey:
+              columns: [Task_Id, Label_Id]
+
+        # Foreign Keys
+        - addForeignKeyConstraint:
+            baseTableName: Attachment
+            baseColumnNames: Task_Id
+            constraintName: Attachment_Task
+            referencedTableName: Task
+            referencedColumnNames: Id
+
+        - addForeignKeyConstraint:
+            baseTableName: Comment
+            baseColumnNames: Task_Id
+            constraintName: Comment_Task
+            referencedTableName: Task
+            referencedColumnNames: Id
+
+        - addForeignKeyConstraint:
+            baseTableName: Comment
+            baseColumnNames: User_Id
+            constraintName: Comment_User
+            referencedTableName: User
+            referencedColumnNames: Id
+
+        - addForeignKeyConstraint:
+            baseTableName: Task
+            baseColumnNames: Project_Id
+            constraintName: Task_Project
+            referencedTableName: Project
+            referencedColumnNames: Id
+
+        - addForeignKeyConstraint:
+            baseTableName: Task
+            baseColumnNames: Assignee_id
+            constraintName: Task_User
+            referencedTableName: User
+            referencedColumnNames: Id
+
+        - addForeignKeyConstraint:
+            baseTableName: task_label
+            baseColumnNames: Task_Id
+            constraintName: task_label_Task
+            referencedTableName: Task
+            referencedColumnNames: Id
+
+        - addForeignKeyConstraint:
+            baseTableName: task_label
+            baseColumnNames: Label_Id
+            constraintName: task_label_Label
+            referencedTableName: Label
+            referencedColumnNames: Id
+
+        - sql:
+            sql: ALTER TABLE Project ADD CONSTRAINT chk_project_status CHECK (Status IN ('INITIATED', 'IN_PROGRESS', 'COMPLETED'));
+
+        - sql:
+            sql: ALTER TABLE Task ADD CONSTRAINT chk_task_priority CHECK (Priority IN ('LOW', 'MEDIUM', 'HIGH'));
+
+        - sql:
+            sql: ALTER TABLE Task ADD CONSTRAINT chk_task_status CHECK (Status IN ('NOT_STARTED', 'IN_PROGRESS', 'COMPLETED'));

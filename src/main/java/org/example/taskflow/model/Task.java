@@ -1,15 +1,24 @@
 package org.example.taskflow.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "tasks")
@@ -26,9 +35,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     private String name;
-
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -37,13 +44,27 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @NotNull
-    private LocalDate dueDate;
+    private LocalDateTime dueDate;
 
-    @NotNull
-    private Long projectId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Project_Id", nullable = false)
+    private Project project;
 
-    private Long assigneeId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "Assignee_id", nullable = false)
+    private User assignee;
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Attachment> attachments = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "task_label",
+            joinColumns = @JoinColumn(name = "Task_Id"),
+            inverseJoinColumns = @JoinColumn(name = "Label_Id"))
+    private Set<Label> labels = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -53,11 +74,11 @@ public class Task {
         this.id = id;
     }
 
-    public @NotBlank String getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(@NotBlank String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -85,27 +106,51 @@ public class Task {
         this.status = status;
     }
 
-    public @NotNull LocalDate getDueDate() {
+    public LocalDateTime getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(@NotNull LocalDate dueDate) {
+    public void setDueDate(LocalDateTime dueDate) {
         this.dueDate = dueDate;
     }
 
-    public @NotNull Long getProjectId() {
-        return projectId;
+    public Project getProject() {
+        return project;
     }
 
-    public void setProjectId(@NotNull Long projectId) {
-        this.projectId = projectId;
+    public void setProject(Project project) {
+        this.project = project;
     }
 
-    public Long getAssigneeId() {
-        return assigneeId;
+    public User getAssignee() {
+        return assignee;
     }
 
-    public void setAssigneeId(Long assigneeId) {
-        this.assigneeId = assigneeId;
+    public void setAssignee(User assignee) {
+        this.assignee = assignee;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
+    public List<Attachment> getAttachments() {
+        return attachments;
+    }
+
+    public void setAttachments(List<Attachment> attachments) {
+        this.attachments = attachments;
+    }
+
+    public Set<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Set<Label> labels) {
+        this.labels = labels;
     }
 }
