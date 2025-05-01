@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "labels")
+@Table(name = "label")
 public class Label {
 
     @Id

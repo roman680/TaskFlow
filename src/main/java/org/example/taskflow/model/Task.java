@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "task")
 public class Task {
     public enum Priority {
         LOW, MEDIUM, HIGH

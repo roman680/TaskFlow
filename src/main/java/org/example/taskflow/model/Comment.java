@@ -16,7 +16,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comment")
 public class Comment {
 
     @EmbeddedId

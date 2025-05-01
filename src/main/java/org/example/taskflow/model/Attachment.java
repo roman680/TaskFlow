@@ -12,7 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "attachments")
+@Table(name = "attachment")
 public class Attachment {
 
     @Id
