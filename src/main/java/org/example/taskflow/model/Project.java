@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "projects")
+@Table(name = "project")
 public class Project {
     public enum Status {
         INITIATED, IN_PROGRESS, COMPLETED
