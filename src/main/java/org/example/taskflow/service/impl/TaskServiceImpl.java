@@ -106,27 +106,31 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task assignToUser(Long taskId, Long userId) {
         Task task = getById(taskId);
-        var user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        var user = userRepository.findById(userId).orElseThrow(() ->
+                new RuntimeException("User not found with id: " + userId));
         task.setAssignee(user);
         return taskRepository.save(task);
     }
 
     @Override
     public List<Task> findByProject(Long projectId) {
-        projectRepository.findById(projectId).orElseThrow(() -> new RuntimeException("Project not found with id: " + projectId));
+        projectRepository.findById(projectId).orElseThrow(() ->
+                new RuntimeException("Project not found with id: " + projectId));
         return taskRepository.findByProjectId(projectId);
     }
 
     @Override
     public List<Task> findByAssignee(Long userId) {
-        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        userRepository.findById(userId).orElseThrow(() ->
+                new RuntimeException("User not found with id: " + userId));
         return taskRepository.findByAssigneeId(userId);
     }
 
     @Override
     public Task addLabel(Long taskId, Long labelId) {
         Task task = getById(taskId);
-        Label label = labelRepository.findById(labelId).orElseThrow(() -> new RuntimeException("Label not found with id: " + labelId));
+        Label label = labelRepository.findById(labelId).orElseThrow(() ->
+                new RuntimeException("Label not found with id: " + labelId));
         task.getLabels().add(label);
         return taskRepository.save(task);
     }

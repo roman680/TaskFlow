@@ -57,7 +57,6 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findAll();
     }
 
-
     @Override
     public Comment update(CommentId id, Comment updated) {
         Comment existing = getById(id);
