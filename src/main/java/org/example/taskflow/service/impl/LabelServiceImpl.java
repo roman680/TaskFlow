@@ -24,7 +24,8 @@ public class LabelServiceImpl implements LabelService {
 
     @Override
     public Label getById(Long id) {
-        return labelRepository.findById(id).orElseThrow(()-> new EntityNotFoundException("Label not found with id: " + id));
+        return labelRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException("Label not found with id: " + id));
     }
 
     @Override
